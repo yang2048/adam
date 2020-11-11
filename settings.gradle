@@ -1,0 +1,5 @@
+rootProject.name = 'adam'
+
+include 'adam-common'
+include 'adam-admin'
+include 'adam-module'

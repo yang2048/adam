@@ -1,0 +1,15 @@
+archivesBaseName = 'adam-admin'
+description = "this is gradle api demo"
+
+jar.enabled = true
+/* 需要org.springframework.boot插件 不需要打包成可执行的jar*/
+bootJar.enabled = false
+
+dependencies {
+	implementation project(':adam-common')
+	implementation project(':adam-module')
+}
+
+test {
+	useJUnitPlatform()
+}

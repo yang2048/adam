@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- 级别从高到低 OFF 、 FATAL 、 ERROR 、 WARN 、 INFO 、 DEBUG 、 TRACE 、 ALL -->
+<!-- 日志输出规则 根据当前ROOT 级别，日志输出时，级别高于root默认的级别时 会输出 -->
+<!-- 以下 每个配置的 filter 是过滤掉输出文件里面，会出现高级别文件，依然出现低级别的日志信息，通过filter 过滤只记录本级别的日志 -->
+<!-- scan 当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true。 -->
+<!-- scanPeriod 设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。 -->
+<!-- debug 当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 -->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <!-- 动态日志级别 -->
+    <jmxConfigurator/>
+
+    <!-- 定义日志文件 输出位置 -->
+    <property name="log.home_dir" value="/logs/shop"/>
+    <property name="log.app_name" value="arden-shop"/>
+    <!-- 日志最大的历史 30天 -->
+    <property name="log.maxHistory" value="30"/>
+    <!-- 超过2G清除 -->
+    <property name="log.totalSizeCap" value="2GB"/>
+    <property name="log.maxSize" value="50MB" />
+
+    <!-- ConsoleAppender 控制台输出日志 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                <!-- 设置日志输出格式 -->
+                |--%red(%d{yyyy-MM-dd HH:mm:SSS}) %highlight([%-5level]) %green([%thread]) [%boldMagenta(%logger):%line] %cyan(%msg%n)
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 过滤器，只记录WARN级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!-- 最常用的滚动策略，它根据时间来制定滚动策略.既负责滚动也负责触发滚动 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志输出位置 可相对、和绝对路径 -->
+            <fileNamePattern>
+                ${log.home_dir}/${log.app_name}/warn/%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <maxHistory>${log.maxHistory}</maxHistory>
+            <totalSizeCap>${log.totalSizeCap}</totalSizeCap>
+            <!--日志文件最大的大小-->
+            <MaxFileSize>${log.maxSize}</MaxFileSize>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder charset="utf-8">
+            <pattern>
+                |--%d{yyyy-MM-dd HH:mm:SSS} [%-5level] [%thread] [%logger{50}:%line] %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!--所有级别的日志都会输出-->
+    <appender name="APP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${log.home_dir}/${log.app_name}/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>${log.maxHistory}</maxHistory>
+            <totalSizeCap>${log.totalSizeCap}</totalSizeCap>
+            <MaxFileSize>${log.maxSize}</MaxFileSize>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+        </filter>
+        <!-- 追加方式记录日志 -->
+        <append>true</append>
+        <encoder charset="utf-8">
+            <pattern>
+                |--%d{yyyy-MM-dd HH:mm:SSS} [%-5level] [%thread] [%logger{50}:%line] %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- 开发环境 + 测试环境. -->
+    <springProfile name="test, dev, uat">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+        <logger name="com.yyovo.adam" level="DEBUG" additivity="true" />
+    </springProfile>
+
+    <!-- 生产环境. -->
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="APP"/>
+            <appender-ref ref="ERROR"/>
+        </root>
+        <logger name="com.yyovo.adam" level="INFO" additivity="true" />
+    </springProfile>
+
+</configuration>
+

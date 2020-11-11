@@ -1,0 +1,13 @@
+archivesBaseName = 'adam-common'
+description = "this is gradle api demo"
+
+jar.enabled = true
+bootJar.enabled = false
+
+dependencies {
+
+}
+
+test {
+	useJUnitPlatform()
+}

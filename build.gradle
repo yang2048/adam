@@ -1,0 +1,116 @@
+buildscript {
+    ext {
+        if (!project.hasProperty("env")) {
+            println '没有配置数据环境，默认使用 开发环境'
+            env = "dev"
+        }
+        println "当前使用的部署环境为:${project['env']}"
+
+        springBootVersion = '2.3.4.RELEASE'
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '2.3.4.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+    id 'idea'
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/spring/' }
+        mavenCentral()
+    }
+}
+
+subprojects {
+    group = 'com.yyovo'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '1.8'
+
+    apply plugin: 'java' /* java是Gradle的核心插件，是内置的，内置插件不需要配置依赖路径 */
+    apply plugin: 'idea' /* 同上  让Gradle自动生成Intellij的项目文件*/
+    /* 注意gradle插件不再自动应用，所以这里需要指定 */
+    apply plugin: 'org.springframework.boot'
+    /* 依赖管理插件仍然是一个spring-boot-gradle-plugin传递依赖，所以无需在build.gradle配置中明确列出此依赖。 */
+    apply plugin: 'io.spring.dependency-management' /* 依赖管理，用来传递spring的依赖 */
+
+    //指定gradle编译时，针对java文件使用 UTF-8 编码
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    ext {
+        junitVersion = "4.11"
+        springVersion = "4.3.3.RELEASE"
+        jacksonVersion = "2.4.4"
+        compileJava.options.encoding = 'UTF-8'
+        compileTestJava.options.encoding = 'UTF-8'
+    }
+
+    //配置依赖
+    dependencies {
+
+        implementation "org.springframework.boot:spring-boot-starter-aop"
+        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'org.springframework.boot:spring-boot-starter-amqp'
+        implementation 'org.springframework.boot:spring-boot-starter-quartz'
+        compile("org.springframework.boot:spring-boot-starter-actuator")
+        implementation 'com.baomidou:mybatis-plus-boot-starter:3.4.0'
+        implementation 'com.github.xiaoymin:knife4j-spring-boot-starter:2.0.5'
+        implementation 'com.alibaba:druid-spring-boot-starter:1.2.1'
+        //代码生成
+        implementation 'com.baomidou:mybatis-plus-generator:3.4.0'
+        implementation 'org.apache.velocity:velocity-engine-core:2.2'
+        implementation 'redis.clients:jedis:2.9.3'
+        compile 'cn.hutool:hutool-all:5.4.4'
+        compile 'com.alibaba:fastjson:1.2.74'
+        compileOnly 'org.projectlombok:lombok'
+        runtimeOnly 'mysql:mysql-connector-java'
+        annotationProcessor 'org.projectlombok:lombok'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+        testImplementation 'org.springframework.amqp:spring-rabbit-test'
+
+    }
+
+    dependencyManagement {
+        imports {
+//            mavenBom("org.springframework.boot:spring-boot-dependencies:2.1.9.RELEASE")
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    //打jar包需要的配置
+    jar {
+        manifestContentCharset 'utf-8'
+        metadataCharset 'utf-8'
+        manifest {
+            attributes(
+                    "Manifest-Version": 1.0,
+                    "Main-Class": "com.example.demoweb.DemoWebApplication"   //主函数的名称，如果只有一个main方法，可以在这里设置好。
+            )
+        }
+        from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+        into('assets') {
+            from 'assets'
+        }
+    }
+}
+
+bootJar {
+    mainClassName = 'com.example.demoweb.DemoWebApplication'
+}

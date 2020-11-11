@@ -1,0 +1,49 @@
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 0
+    timeout: 10000
+  rabbitmq:
+    host: localhost
+    port: 5672
+    virtual-host: /
+    username: guest
+    password: guest
+  datasource:
+    druid:
+      name: adam-test
+      url: jdbc:mysql://localhost:3306/almas?useSSL=false&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&serverTimezone=Asia/Shanghai
+      username: root
+      password: root
+      validationQuery: SELECT 1 FROM DUAL
+      filters: [ stat,wall,log4j ]
+      #      useGlobalDataSourceStat: true
+      #      testOnBorrow: false
+      #指明是否在归还到池中前进行检验
+      #      testOnReturn: false
+      testWhileIdle: false
+      asyncInit: true
+      statViewServlet:
+        enabled: true
+        url-pattern: /druid/*
+      webStatFilter:
+        enabled: true
+        url-pattern: /*
+
+
+mybatis-plus:
+  typeAliasesPackage: com.yyovo.adam.**.model.pojo
+  #  typeEnumsPackage: com.yyovo.adam.**.constant
+  #  configuration.default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+
+  #  mapperLocations: classpath*:/mapper/**/*.xml
+  configuration:
+    defaultEnumTypeHandler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler
+    #自动驼峰命名规则
+    map-underscore-to-camel-case: true
+  global-config:
+    superMapperClass: com.yyovo.adam.common.base.mapper.SuperMapper
+    db-config:
+      table-prefix: y_
