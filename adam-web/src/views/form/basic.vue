@@ -53,7 +53,7 @@ title: 基础表单
         this.$message.success('提交成功')
       },
       test() {
-        const singles = {select: [{ label: '选择166', value: 'a1', desc: '其他值' }, { label: '选择2', value: 'a2', disabled: true, checked: true }, { label: '选择3', value: 'a3' }]}
+        const singles = {select: [{ label: '选择166', value: 'a1', desc: '其他值' }, { label: '选择2', value: 'a2', disabled: false, checked: true }, { label: '选择3', value: 'a3' }]}
         this.$store.dispatch('dictInit', singles) // 触发actions对应的change
 
         this.$message.success('提交测试')

@@ -28,7 +28,19 @@ setConfig({
     // 权限不足页面路径
     authorizePath: '/403'
   },
-  
   analysis: false
+    /**
+   * 属性名映射
+   */
+  // keys: {
+  //   code: 'code',
+  //   data: 'data',
+  //   message: 'msg',
+  //   total: 'total',
+  //   list: 'records',
+  //   page: 'page',
+  //   limit: 'limit',
+  //   pages: 'pages'
+  // }
 })
 

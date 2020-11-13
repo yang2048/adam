@@ -17,7 +17,7 @@
 <script>
   import logo from '$ui/assets/logo.png'
   import skin from '$ui/utils/skin'
-import sysUserApi from '$my/code/mixin/sys-user-api'
+  import sysUserApi from '$my/code/mixin/sys-user-api'
 
   export default {
     mixins: [skin(), sysUserApi],

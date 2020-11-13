@@ -12,5 +12,20 @@
  *    return {code: 0, data: [], msg: ''}
  * }
  */
+import {create} from '$ui/utils/tree'
+
 export default {
+  convertTable (res, method, postData, params) {
+    if (res.data != null && res.data !== []) {
+      // if (res.data.records) {
+      //   res.data.list = res.data.records
+      // }
+      res.data.list = res.data.records
+    }
+    return {code: res.code, data: res.data, msg: res.msg}
+  },
+  convertTree (res, method, postData, params) {
+    const tree = create(res.data, postData.parentId.toString(), 'id', 'parentId')
+    return {code: res.code, data: tree, msg: res.msg}
+ }
 }

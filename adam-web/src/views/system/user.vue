@@ -16,7 +16,9 @@ title: 系统用户
                    :expand-on-click-node="false"
                    :default-expanded-keys="expandedKeys"
                    :current-node-key="0"
-                   @current-change="handleCurrentChange"></el-tree>
+                   :render-content="renderContent"
+                   @current-change="handleCurrentChange">
+          </el-tree>
         </my-panel>
       </el-col>
       <el-col :span="18" :xs="24">
@@ -27,28 +29,51 @@ title: 系统用户
           </template>
 
           <template v-slot:handle>
-            <el-button size="mini" type="primary" icon="el-icon-plus">新增</el-button>
+            <el-button size="mini" type="primary" icon="el-icon-plus" @click="openAddDialog">新增</el-button>
             <el-button size="mini" icon="el-icon-bottom-right">迁移</el-button>
-            <el-button size="mini" type="danger" icon="el-icon-delete">批量删除</el-button>
+            <el-button size="mini" type="danger" icon="el-icon-delete" @click="batchRemove">批量删除</el-button>
           </template>
-          <my-container>
-            <my-filter label-width="60px" collapsible :model="defaultQuery" @submit="handleQuery">
-              <my-input label="关键词" name="name"></my-input>
-              <my-select label="性别" name="sex" collapsible :options="[{label:'男',value:1},{label:'女',value:0}]"></my-select>
-              <my-input label="条件1" name="q1" collapsible></my-input>
-              <my-input label="条件2" name="q2" collapsible></my-input>
-              <my-input label="条件3" name="q3" collapsible></my-input>
-            </my-filter>
-          </my-container>
-          <my-table ref="table" v-loading.body="loading" :fit="fit" :columns="columns" :loader="loaderTable" :page="1" :page-size="10">
-            <template v-slot:handle>
-              <el-link type="primary">详情</el-link>
-              <el-divider direction="vertical"></el-divider>
-              <el-link type="primary">编辑</el-link>
-              <el-divider direction="vertical"></el-divider>
-              <el-link type="primary">删除</el-link>
+          
+          <my-crud ref="table" v-loading.body="loading" :fit="fit" :columns="columns"
+          :filter="{ collapsible: true, labelWidth: '60px' }"
+          :form-options="{ labelWidth: '80px' }"
+          :form-dialog="{ width: '50%' }"
+          :view-dialog="{ width: '60%', height: '60%' }"
+          :adapter="adapter">
+            <!-- 定义筛选条件 -->
+            <template v-slot:filter>
+                <my-input label="用户名" name="userAccount"></my-input>
+                <my-select label="性别" name="gender" :options="[{label:'男',value:1},{label:'女',value:2}]"></my-select>
+                <my-input label="条件1" name="q1" collapsible></my-input>
             </template>
-          </my-table>
+
+            <!-- 定义新增/修改表单 -->
+            <template v-slot:form>
+              <div>
+                <my-input label="用户名" name="userAccount" :rules="{ required: true }" ></my-input>
+                <my-input label="昵称" name="nickname" :rules="{ required: true }" ></my-input>
+                <my-input label="手机" name="phone" :rules="{ required: true }" ></my-input>
+                <my-input label="邮箱" name="email" :rules="{ required: true }" ></my-input>
+                <my-input label="性别" name="gender" :rules="{ required: true }" ></my-input>
+                <my-date-picker label="出生日期" name="birthday" :props="{valueFormat:'yyyy-MM-dd'}"></my-date-picker>
+                <my-input label="部门" name="deptId" :rules="{ required: true }" ></my-input>
+                <my-input label="头像" name="avatar" ></my-input>
+                <my-input label="备注" name="remark" ></my-input>
+                <my-input label="类型" name="userType" ></my-input>
+                <my-radio label="状态" name="disable" dict="select" :loader="loaderGender"></my-radio>
+              </div>
+            </template>
+
+            <!-- 定义详情内容 -->
+            <template v-slot:detail="{ row }">
+              <my-detail border :column="2">
+                <my-detail-item label="用户名">{{ row.userAccount }}</my-detail-item>
+                <my-detail-item label="昵称">{{row.nickname}}</my-detail-item>
+                <my-detail-item label="手机">{{row.email}}</my-detail-item>
+                <my-detail-item label="邮箱">{{row.phone}}</my-detail-item>
+              </my-detail>
+            </template>
+          </my-crud>
         </my-panel>
       </el-col>
     </el-row>
@@ -56,24 +81,38 @@ title: 系统用户
 </template>
 
 <script>
-  import MockForExample from '$my/code/mixin/mock-for-example'
+  import SysUserApi from '$my/code/mixin/sys-user-api'
   import treeConnect from '$ui/directives/tree-connect'
+  // import {MyCrud} from '$ui'
 
   export default {
-    mixins: [MockForExample],
+    mixins: [SysUserApi],
     directives: {treeConnect},
     inject: ['myPro'],
     data() {
       return {
         defaultQuery: this.$route.query,
         query: {},
+        // adapter: MyCrud.adapter.call(this, 'sysUser'),
+        adapter: {
+        get: this.getAdapter,
+        fetch: this.fetchAdapter,
+        add: this.addAdapter,
+        update: this.updateAdapter,
+        remove: this.removeAdapter,
+        batch: this.batchAdapter
+        },
         columns: [
           {
             type: 'selection'
           },
           {
-            label: '名称',
-            prop: 'name'
+            label: '账号',
+            prop: 'userAccount'
+          },
+          {
+            label: '昵称',
+            prop: 'nickname'
           },
           {
             label: '邮箱',
@@ -85,17 +124,12 @@ title: 系统用户
             prop: 'phone',
             showOverflowTooltip: true
           },
-          {
-            label: '城市',
-            prop: 'city',
-            showOverflowTooltip: true
-          },
-          {
-            type: 'handle',
-            prop: 'handle',
-            label: '操作',
-            width: '140px'
-          }
+        {
+          type: 'handle',
+          label: '操作',
+          width: 200,
+          handles: [{ view: true }, { edit: true }, { remove: true }]
+        }
         ],
         currentNode: null,
         expandedKeys: [0],
@@ -108,41 +142,42 @@ title: 系统用户
       },
       currentTitle() {
         if (!this.currentNode) return ''
-        return this.currentNode.data.label
+        return this.currentNode.data.name
       }
     },
     methods: {
-      loaderTable(page, limit) {
-        if (!this.currentNode) return []
-        this.query.nodeId = this.currentNode.data.id
-        return this.fetchMockForExample({
-          data: {
-            ...this.query,
-            page,
-            limit
-          }
-        })
-      },
       loader(node, resolve) {
         if (node.data) {
           this.loading = true
-          this.getTree({
+          this.getDeptTree({
             data: {
               parentId: node.data.id
             }
           }).then(res => resolve(res))
             .finally(() => {
-              this.$refs.table.refresh(1)
+              // this.$refs.table.refresh(1)
               this.loading = false
             })
         } else {
           resolve([{
-            label: '根节点',
+            name: '根节点',
             id: 0,
             parentId: 'root',
             children: []
           }])
         }
+      },
+      loaderGender(model, {name, dict}) {
+        return Promise.resolve(this.$store.getters.getDict(dict))
+      },
+      renderContent(h, { node, data, store }) {
+        return (
+          <span className="custom-tree-node">
+            <span>{data.name}</span>
+            <span >
+              <el-button size="mini" type="text" on-click={ () => this.append(data) }>编辑</el-button>
+            </span>
+          </span>);
       },
       handleCurrentChange(data, node) {
         this.expandedKeys = [data.id]
@@ -158,6 +193,62 @@ title: 系统用户
       },
       shrink() {
         this.$message('展开~~~');
+      },
+      updateNode(node, data) {
+
+      },
+      getAdapter({ row }) {
+        return this.getUser({
+          data: {
+            ...row
+          }
+        })
+      },
+      fetchAdapter(page, query) {
+        if (!this.currentNode) return []
+        this.query.nodeId = this.currentNode.data.id
+        return this.pageUser({
+          data: {
+            ...page,
+            ...this.query
+          }
+        })
+      },
+      addAdapter({row, index}) {
+        return this.saveUser({
+          data: {
+            ...row
+          },
+          index
+        })
+      },
+      updateAdapter({row, index}) {
+        return this.updateUser({
+          id: row.id,
+          data: {
+            ...row
+          }
+        })
+      },
+      removeAdapter({row, index}) {
+        return this.removeUser({
+          id: row.id,
+          index
+        })
+      },
+      batchAdapter({rows, indexes}) {
+        return this.batchRemoveUser({
+          data: {
+            ...rows
+          },
+          indexes
+        })
+      },
+      openAddDialog() {
+        this.$refs.table.openAddDialog()
+      },
+      batchRemove() {
+        this.$refs.table.batchRemove()
       }
     },
     mounted() {
@@ -178,6 +269,14 @@ title: 系统用户
         min-height: 100%;
       }
     }
+  }
+  .custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
   }
 
 </style>
