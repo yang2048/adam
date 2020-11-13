@@ -71,7 +71,7 @@ public class SysMenuController extends SuperController {
     public Result<?> page(MenuQueryDTO menuQueryDTO) {
         LambdaQueryWrapper<SysMenu> ew = Wrappers.lambdaQuery();
 
-        Page<SysMenu> page = new Page<>(menuQueryDTO.getCurrent(), menuQueryDTO.getSize());
+        Page<SysMenu> page = new Page<>(menuQueryDTO.getPage(), menuQueryDTO.getLimit());
         page.addOrder(OrderItem.asc("sort"));
         page = sysMenuService.page(page, ew);
         return Result.success(ConvertUtil.copyToPage(page, MenuVO.class));

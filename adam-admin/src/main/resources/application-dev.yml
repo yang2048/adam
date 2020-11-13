@@ -35,7 +35,7 @@ spring:
 
 mybatis-plus:
   typeAliasesPackage: com.yyovo.adam.**.model.pojo
-  #  typeEnumsPackage: com.yyovo.adam.**.constant
+  typeEnumsPackage: com.yyovo.adam.**.model.enums;com.yyovo.adam.admin.system.model.enums
   #  configuration.default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
 
   #  mapperLocations: classpath*:/mapper/**/*.xml

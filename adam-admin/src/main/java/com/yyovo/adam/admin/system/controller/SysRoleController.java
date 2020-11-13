@@ -71,7 +71,7 @@ public class SysRoleController extends SuperController {
     public Result<?> page(RoleQueryDTO roleQueryDTO) {
         LambdaQueryWrapper<SysRole> ew = Wrappers.lambdaQuery();
 
-        Page<SysRole> page = new Page<>(roleQueryDTO.getCurrent(), roleQueryDTO.getSize());
+        Page<SysRole> page = new Page<>(roleQueryDTO.getPage(), roleQueryDTO.getLimit());
         page.addOrder(OrderItem.asc("sort"));
         page = sysRoleService.page(page, ew);
         return Result.success(ConvertUtil.copyToPage(page, RoleVO.class));

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * <p>
@@ -72,7 +73,7 @@ public class SysDeptController extends SuperController {
     public Result<?> page(DeptQueryDTO deptQueryDTO) {
         LambdaQueryWrapper<SysDept> ew = Wrappers.lambdaQuery();
 
-        Page<SysDept> page = new Page<>(deptQueryDTO.getCurrent(), deptQueryDTO.getSize());
+        Page<SysDept> page = new Page<>(deptQueryDTO.getPage(), deptQueryDTO.getLimit());
         page.addOrder(OrderItem.asc("sort"));
         page = sysDeptService.page(page, ew);
         return Result.success(ConvertUtil.copyToPage(page, DeptVO.class));
@@ -90,6 +91,17 @@ public class SysDeptController extends SuperController {
     public Result<?> BatchRemove(@RequestParam Long[] idList) {
         sysDeptService.removeByIds(Arrays.asList(idList));
         return Result.success();
+    }
+
+    @GetMapping("listDept")
+    @ApiOperation(value = "部门列表")
+    public Result<?> ListDept(DeptQueryDTO deptQueryDTO){
+        LambdaQueryWrapper<SysDept> ew = Wrappers.lambdaQuery();
+        ew.eq(SysDept::getDisable, false);
+        ew.eq(SysDept::getParentId, deptQueryDTO.getParentId());
+        List<SysDept> sysDeptList = sysDeptService.list(ew);
+//        List<DeptVO> deptVOList = ConvertUtil.copyToList(sysDeptList, DeptVO.class);
+        return Result.success(ConvertUtil.copyToList(sysDeptList, DeptVO.class));
     }
 }
 

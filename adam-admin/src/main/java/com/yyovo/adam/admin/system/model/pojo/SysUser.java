@@ -1,5 +1,7 @@
 package com.yyovo.adam.admin.system.model.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yyovo.adam.admin.system.model.enums.GenderEnum;
 import com.yyovo.adam.common.base.model.SuperModel;

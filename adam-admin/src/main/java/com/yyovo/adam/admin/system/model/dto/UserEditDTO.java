@@ -12,6 +12,10 @@ import java.time.LocalDate;
 @Data
 @ApiModel(value = "系统用户", description = "UserEditDTO")
 public class UserEditDTO {
+    
+    @ApiModelProperty(value = "主键ID")
+    private Long id;
+
     @ApiModelProperty(value = "机构id 可同时属多部门")
     private Long deptId;
 

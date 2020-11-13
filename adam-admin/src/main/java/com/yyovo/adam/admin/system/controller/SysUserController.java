@@ -19,10 +19,11 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -71,11 +72,10 @@ public class SysUserController {
      * @param userEditDTO 请求参数
      * @return R
      */
-    @PatchMapping("{id}")
+    @PatchMapping()
     @ApiOperation(value = "修改用户")
-    public Result<?> update(@PathVariable("id") Long id, @RequestBody UserEditDTO userEditDTO) {
+    public Result<?> update(@RequestBody UserEditDTO userEditDTO) {
         SysUser user = ConvertUtil.copyToDest(userEditDTO, SysUser.class);
-        user.setId(id);
         sysUserService.updateById(user);
         return Result.success(ConvertUtil.copyToDest(user, UserVO.class));
     }
@@ -106,10 +106,13 @@ public class SysUserController {
         if (!StrUtil.isEmptyOrUndefined(userQueryDTO.getGender())) {
             ew.eq(SysUser::getGender, GenderEnum.convert(userQueryDTO.getGender()));
         }
+        if (!StrUtil.isEmptyOrUndefined(userQueryDTO.getUserAccount())) {
+            ew.like(SysUser::getUserAccount, userQueryDTO.getUserAccount());
+        }
 //        ew.eq(SysUser::getAvatar, "q");
 //        ew.orderByDesc(SysUser::getRegisterTime);
 
-        Page<SysUser> page = new Page<>(userQueryDTO.getCurrent(), userQueryDTO.getSize());
+        Page<SysUser> page = new Page<>(userQueryDTO.getPage(), userQueryDTO.getLimit());
         page.addOrder(OrderItem.asc("register_time"));
         page = sysUserService.page(page, ew);
         return Result.success(ConvertUtil.copyToPage(page, UserVO.class));
@@ -131,13 +134,14 @@ public class SysUserController {
     /**
      * 批量删除
      *
-     * @param idList 主键集合
+     * @param userEditDTOS 主键集合
      * @return R
      */
     @PostMapping("remove")
     @ApiOperation(value = "批量删除用户")
-    public Result<?> BatchRemove(@RequestParam Long[] idList) {
-        sysUserService.removeByIds(Arrays.asList(idList));
+    public Result<?> batchRemove(@RequestBody List<UserEditDTO> userEditDTOS) {
+        List<Long> idList = userEditDTOS.stream().map(UserEditDTO::getId).collect(Collectors.toList());
+        sysUserService.removeByIds(idList);
         return Result.success();
     }
 

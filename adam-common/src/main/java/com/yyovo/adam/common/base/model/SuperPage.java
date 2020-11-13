@@ -15,11 +15,11 @@ public class SuperPage implements Serializable {
      * 每页显示条数，默认 10
      */
     @ApiModelProperty(value = "每页显示条数")
-    protected long size = 10;
+    protected long limit = 10;
 
     /**
      * 当前页
      */
     @ApiModelProperty(value = "当前页")
-    protected long current = 1;
+    protected long page = 1;
 }
