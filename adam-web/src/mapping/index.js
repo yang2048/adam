@@ -25,7 +25,7 @@ export default {
     return {code: res.code, data: res.data, msg: res.msg}
   },
   convertTree (res, method, postData, params) {
-    const tree = create(res.data, postData.parentId.toString(), 'id', 'parentId')
+    const tree = create(res.data, postData.parentId, 'id', 'parentId')
     return {code: res.code, data: tree, msg: res.msg}
  }
 }

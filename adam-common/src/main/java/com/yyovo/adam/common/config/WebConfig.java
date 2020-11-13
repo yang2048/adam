@@ -39,6 +39,7 @@ public class WebConfig implements WebMvcConfigurer {
         FastJsonConfig fjc = new FastJsonConfig();
         // 配置序列化策略
         fjc.setSerializerFeatures(
+                SerializerFeature.BrowserCompatible,
                 SerializerFeature.PrettyFormat,
                 SerializerFeature.WriteNullStringAsEmpty,
                 SerializerFeature.WriteNullListAsEmpty,
