@@ -10,6 +10,6 @@ export default function({ get }) {
   // .catch(e => {
   //   // to do something...
   // })
-
+  console.warn('============== ajaxajaxajax =================')
   return [];
 }

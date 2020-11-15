@@ -8,7 +8,8 @@ export default {
     singles: {}
   },
   getters: {
-    getDict: (state) => (dictCode) => {
+    getDict: (state, getters) => (dictCode) => {
+      console.warn('============== getDict =================')
       return state.dicts[dictCode]
     }
   },
@@ -27,6 +28,7 @@ export default {
   },
   actions: {
     dictInit ({ state, commit, rootState }, payload) {
+      console.warn('============== dictInit =================')
       commit('DICT_INIT', payload);
       if (Object.keys(state.dicts).length === 0) {
         console.warn('============== 字典数据未初始化 =================')

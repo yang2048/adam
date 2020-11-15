@@ -83,7 +83,7 @@ title: 系统用户
 <script>
   import SysUserApi from '$my/code/mixin/sys-user-api'
   import treeConnect from '$ui/directives/tree-connect'
-  // import {MyCrud} from '$ui'
+  import {MyCrud} from '$ui'
 
   export default {
     mixins: [SysUserApi],
@@ -93,15 +93,7 @@ title: 系统用户
       return {
         defaultQuery: this.$route.query,
         query: {},
-        // adapter: MyCrud.adapter.call(this, 'sysUser'),
-        adapter: {
-        get: this.getAdapter,
-        fetch: this.fetchAdapter,
-        add: this.addAdapter,
-        update: this.updateAdapter,
-        remove: this.removeAdapter,
-        batch: this.batchAdapter
-        },
+        adapter: MyCrud.adapter.call(this, 'SysUserApi'),
         columns: [
           {
             type: 'selection'
@@ -196,53 +188,6 @@ title: 系统用户
       },
       updateNode(node, data) {
 
-      },
-      getAdapter({ row }) {
-        return this.getUser({
-          data: {
-            ...row
-          }
-        })
-      },
-      fetchAdapter(page, query) {
-        if (!this.currentNode) return []
-        this.query.nodeId = this.currentNode.data.id
-        return this.pageUser({
-          data: {
-            ...page,
-            ...this.query
-          }
-        })
-      },
-      addAdapter({row, index}) {
-        return this.saveUser({
-          data: {
-            ...row
-          },
-          index
-        })
-      },
-      updateAdapter({row, index}) {
-        return this.updateUser({
-          id: row.id,
-          data: {
-            ...row
-          }
-        })
-      },
-      removeAdapter({row, index}) {
-        return this.removeUser({
-          id: row.id,
-          index
-        })
-      },
-      batchAdapter({rows, indexes}) {
-        return this.batchRemoveUser({
-          data: {
-            ...rows
-          },
-          indexes
-        })
       },
       openAddDialog() {
         this.$refs.table.openAddDialog()
