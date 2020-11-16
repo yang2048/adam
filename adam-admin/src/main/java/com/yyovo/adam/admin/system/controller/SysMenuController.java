@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yyovo.adam.admin.system.model.dto.MenuEditDTO;
 import com.yyovo.adam.admin.system.model.dto.MenuQueryDTO;
+import com.yyovo.adam.admin.system.model.dto.RoleEditDTO;
 import com.yyovo.adam.admin.system.model.enums.SystemError;
 import com.yyovo.adam.admin.system.model.pojo.SysMenu;
 import com.yyovo.adam.admin.system.model.vo.MenuVO;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -50,11 +53,10 @@ public class SysMenuController extends SuperController {
         return Result.success(ConvertUtil.copyToDest(menu, MenuVO.class));
     }
 
-    @PatchMapping("{id}")
+    @PatchMapping
     @ApiOperation(value = "修改")
-    public Result<?> update(@PathVariable("id") Long id, @RequestBody MenuEditDTO menuEditDTO) {
+    public Result<?> update(@RequestBody @Valid MenuEditDTO menuEditDTO) {
         SysMenu menu = ConvertUtil.copyToDest(menuEditDTO, SysMenu.class);
-        menu.setId(id);
         sysMenuService.updateById(menu);
         return Result.success(ConvertUtil.copyToDest(menu, MenuVO.class));
     }
@@ -86,8 +88,9 @@ public class SysMenuController extends SuperController {
 
     @PostMapping("remove")
     @ApiOperation(value = "批量删除")
-    public Result<?> BatchRemove(@RequestParam Long[] idList) {
-        sysMenuService.removeByIds(Arrays.asList(idList));
+    public Result<?> BatchRemove(@RequestBody List<MenuEditDTO> editDTOS) {
+        List<Long> idList = editDTOS.stream().map(MenuEditDTO::getId).collect(Collectors.toList());
+        sysMenuService.removeByIds(idList);
         return Result.success();
     }
 }

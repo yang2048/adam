@@ -39,6 +39,7 @@ public class CodeGenerator {
         AutoGenerator mpg = new AutoGenerator();
         // 全局配置
         GlobalConfig globalConfig = new GlobalConfig();
+        globalConfig.setFileOverride(true);
         globalConfig.setOutputDir(System.getProperty("user.dir") + "/src/main/java");
         globalConfig.setAuthor("Yong.Yang");
         globalConfig.setOpen(false);

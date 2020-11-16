@@ -74,7 +74,7 @@ public class SysUserController {
      */
     @PatchMapping()
     @ApiOperation(value = "修改用户")
-    public Result<?> update(@RequestBody UserEditDTO userEditDTO) {
+    public Result<?> update(@RequestBody @Valid UserEditDTO userEditDTO) {
         SysUser user = ConvertUtil.copyToDest(userEditDTO, SysUser.class);
         sysUserService.updateById(user);
         return Result.success(ConvertUtil.copyToDest(user, UserVO.class));

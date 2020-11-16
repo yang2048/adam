@@ -2,8 +2,7 @@
 title: 系统用户
 ---
 <template>
-  <my-wrapper title="树结构列表" fit>
-    <template v-slot:extra>对树结构数据进行维护管理</template>
+  <my-wrapper title="系统用户管理列表" fit>
     <el-row :class="{'is-fit':fit}" :gutter="14">
       <el-col :span="6" :xs="24">
         <my-panel theme="border-left" :fit="fit" shadow="never" title="组织机构">
@@ -82,11 +81,12 @@ title: 系统用户
 
 <script>
   import SysUserApi from '$my/code/mixin/sys-user-api'
+    import SysDeptApi from '$my/code/mixin/sys-dept-api'
   import treeConnect from '$ui/directives/tree-connect'
   import {MyCrud} from '$ui'
 
   export default {
-    mixins: [SysUserApi],
+    mixins: [SysUserApi, SysDeptApi],
     directives: {treeConnect},
     inject: ['myPro'],
     data() {
@@ -141,13 +141,14 @@ title: 系统用户
       loader(node, resolve) {
         if (node.data) {
           this.loading = true
-          this.getDeptTree({
+          this.fetchSysDeptApi({
             data: {
+              pagination: false,
               parentId: node.data.id
             }
           }).then(res => resolve(res))
             .finally(() => {
-              // this.$refs.table.refresh(1)
+              this.$refs.table.refresh(1)
               this.loading = false
             })
         } else {

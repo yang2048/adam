@@ -19,6 +19,12 @@ import java.io.Serializable;
 public class DeptEditDTO implements Serializable {
 
     /**
+     * 主键ID
+     */
+    @ApiModelProperty(value = "主键ID")
+    private Long id;
+
+    /**
      * 父部门id
      */
     @ApiModelProperty(value = "父部门id")

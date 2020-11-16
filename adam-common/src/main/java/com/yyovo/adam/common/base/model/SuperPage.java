@@ -12,14 +12,20 @@ import java.io.Serializable;
 @Setter
 public class SuperPage implements Serializable {
     /**
+     * 是否分页，默认true
+     */
+    @ApiModelProperty(value = "是否分页，默认true")
+    protected boolean pagination = true;
+
+    /**
      * 每页显示条数，默认 10
      */
-    @ApiModelProperty(value = "每页显示条数")
+    @ApiModelProperty(value = "每页显示条数，默认10")
     protected long limit = 10;
 
     /**
      * 当前页
      */
-    @ApiModelProperty(value = "当前页")
+    @ApiModelProperty(value = "当前页，默认1")
     protected long page = 1;
 }

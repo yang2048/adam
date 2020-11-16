@@ -11,6 +11,13 @@ import java.io.Serializable;
 @Setter
 @ApiModel(value = "系统权限菜单", description = "MenuEditDTO")
 public class MenuEditDTO implements Serializable {
+
+    /**
+     * 主键ID
+     */
+    @ApiModelProperty(value = "主键ID")
+    private Long id;
+
     /**
      * 父级id
      */

@@ -7,12 +7,16 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
 @ApiModel(value = "系统用户", description = "UserEditDTO")
-public class UserEditDTO {
-    
+public class UserEditDTO implements Serializable {
+
+    /**
+     * 主键ID
+     */
     @ApiModelProperty(value = "主键ID")
     private Long id;
 

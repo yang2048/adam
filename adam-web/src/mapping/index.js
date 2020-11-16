@@ -17,10 +17,9 @@ import {create} from '$ui/utils/tree'
 export default {
   convertTable (res, method, postData, params) {
     if (res.data != null && res.data !== []) {
-      // if (res.data.records) {
-      //   res.data.list = res.data.records
-      // }
-      res.data.list = res.data.records
+      if (res.data.records) {
+        res.data.list = res.data.records
+      }
     }
     return {code: res.code, data: res.data, msg: res.msg}
   },

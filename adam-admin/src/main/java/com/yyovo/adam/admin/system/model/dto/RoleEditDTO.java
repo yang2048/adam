@@ -12,6 +12,12 @@ import java.io.Serializable;
 @ApiModel(value = "系统角色", description = "RoleEditDTO")
 public class RoleEditDTO implements Serializable {
     /**
+     * 主键ID
+     */
+    @ApiModelProperty(value = "主键ID")
+    private Long id;
+
+    /**
      * 角色代码
      */
     @ApiModelProperty(value = "角色代码")

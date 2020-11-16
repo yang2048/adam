@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yyovo.adam.admin.system.model.dto.DeptEditDTO;
 import com.yyovo.adam.admin.system.model.dto.DeptQueryDTO;
+import com.yyovo.adam.admin.system.model.dto.UserEditDTO;
 import com.yyovo.adam.admin.system.model.enums.SystemError;
 import com.yyovo.adam.admin.system.model.pojo.SysDept;
 import com.yyovo.adam.admin.system.model.vo.DeptVO;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -52,11 +54,10 @@ public class SysDeptController extends SuperController {
         return Result.success(ConvertUtil.copyToDest(dept, DeptVO.class));
     }
 
-    @PatchMapping("{id}")
+    @PatchMapping
     @ApiOperation(value = "修改")
-    public Result<?> update(@PathVariable("id") Long id, @RequestBody DeptEditDTO deptEditDTO) {
+    public Result<?> update(@RequestBody @Valid DeptEditDTO deptEditDTO) {
         SysDept dept = ConvertUtil.copyToDest(deptEditDTO, SysDept.class);
-        dept.setId(id);
         sysDeptService.updateById(dept);
         return Result.success(ConvertUtil.copyToDest(dept, DeptVO.class));
     }
@@ -70,13 +71,19 @@ public class SysDeptController extends SuperController {
 
     @GetMapping
     @ApiOperation(value = "获取列表")
-    public Result<?> page(DeptQueryDTO deptQueryDTO) {
+    public Result<?> ListDept(DeptQueryDTO queryDTO){
         LambdaQueryWrapper<SysDept> ew = Wrappers.lambdaQuery();
+        ew.eq(SysDept::getDisable, false);
+        ew.eq(SysDept::getParentId, queryDTO.getParentId());
 
-        Page<SysDept> page = new Page<>(deptQueryDTO.getPage(), deptQueryDTO.getLimit());
-        page.addOrder(OrderItem.asc("sort"));
-        page = sysDeptService.page(page, ew);
-        return Result.success(ConvertUtil.copyToPage(page, DeptVO.class));
+        if (queryDTO.isPagination()) {
+            Page<SysDept> page = new Page<>(queryDTO.getPage(), queryDTO.getLimit());
+            page.addOrder(OrderItem.asc("sort"));
+            page = sysDeptService.page(page, ew);
+            return Result.success(ConvertUtil.copyToPage(page, DeptVO.class));
+        }
+        List<SysDept> sysDeptList = sysDeptService.list(ew);
+        return Result.success(ConvertUtil.copyToList(sysDeptList, DeptVO.class));
     }
 
     @DeleteMapping("{id}")
@@ -88,20 +95,11 @@ public class SysDeptController extends SuperController {
 
     @PostMapping("remove")
     @ApiOperation(value = "批量删除")
-    public Result<?> BatchRemove(@RequestParam Long[] idList) {
-        sysDeptService.removeByIds(Arrays.asList(idList));
+    public Result<?> BatchRemove(@RequestBody List<DeptEditDTO> deptEditDTOS) {
+        List<Long> idList = deptEditDTOS.stream().map(DeptEditDTO::getId).collect(Collectors.toList());
+        sysDeptService.removeByIds(idList);
         return Result.success();
     }
 
-    @GetMapping("listDept")
-    @ApiOperation(value = "部门列表")
-    public Result<?> ListDept(DeptQueryDTO deptQueryDTO){
-        LambdaQueryWrapper<SysDept> ew = Wrappers.lambdaQuery();
-        ew.eq(SysDept::getDisable, false);
-        ew.eq(SysDept::getParentId, deptQueryDTO.getParentId());
-        List<SysDept> sysDeptList = sysDeptService.list(ew);
-//        List<DeptVO> deptVOList = ConvertUtil.copyToList(sysDeptList, DeptVO.class);
-        return Result.success(ConvertUtil.copyToList(sysDeptList, DeptVO.class));
-    }
 }
 

@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yyovo.adam.admin.system.model.dto.DeptEditDTO;
+import com.yyovo.adam.admin.system.model.dto.MenuEditDTO;
 import com.yyovo.adam.admin.system.model.dto.RoleEditDTO;
 import com.yyovo.adam.admin.system.model.dto.RoleQueryDTO;
 import com.yyovo.adam.admin.system.model.enums.SystemError;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -50,11 +54,10 @@ public class SysRoleController extends SuperController {
         return Result.success(ConvertUtil.copyToDest(role, RoleVO.class));
     }
 
-    @PatchMapping("{id}")
+    @PatchMapping
     @ApiOperation(value = "修改")
-    public Result<?> update(@PathVariable("id") Long id, @RequestBody RoleEditDTO roleEditDTO) {
+    public Result<?> update(@RequestBody @Valid RoleEditDTO roleEditDTO) {
         SysRole role = ConvertUtil.copyToDest(roleEditDTO, SysRole.class);
-        role.setId(id);
         sysRoleService.updateById(role);
         return Result.success(ConvertUtil.copyToDest(role, RoleVO.class));
     }
@@ -86,8 +89,9 @@ public class SysRoleController extends SuperController {
 
     @PostMapping("remove")
     @ApiOperation(value = "批量删除")
-    public Result<?> BatchRemove(@RequestParam Long[] idList) {
-        sysRoleService.removeByIds(Arrays.asList(idList));
+    public Result<?> BatchRemove(@RequestBody List<RoleEditDTO> editDTOS) {
+        List<Long> idList = editDTOS.stream().map(RoleEditDTO::getId).collect(Collectors.toList());
+        sysRoleService.removeByIds(idList);
         return Result.success();
     }
 }

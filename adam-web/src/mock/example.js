@@ -127,7 +127,7 @@ export function mockForExampleGetMenus(Mock, url, query, options) {
         {
           icon: 'el-icon-document',
           text: '系统字典',
-          index: '/system/macro'
+          index: '/system/dict'
         }
       ]
     },
@@ -446,7 +446,7 @@ export function mockGetMenusDemo (Mock, url, query, options) {
         {
           icon: 'el-icon-document',
           text: '系统字典',
-          index: '/system/macro'
+          index: '/system/dict'
         }
       ]
     },

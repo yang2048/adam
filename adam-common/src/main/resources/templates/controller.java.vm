@@ -1,0 +1,83 @@
+package ${package.Controller};
+
+
+import org.springframework.web.bind.annotation.RequestMapping;
+
+#if(${restControllerStyle})
+import org.springframework.web.bind.annotation.RestController;
+#else
+import org.springframework.stereotype.Controller;
+#end
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+
+/**
+ * <p>
+ * $!{table.comment} 前端控制器
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${restControllerStyle})
+@RestController
+#else
+@Controller
+#end
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+#if(${kotlin})
+class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
+
+#else
+#if(${superControllerClass})
+public class ${table.controllerName} extends ${superControllerClass} {
+#else
+public class ${table.controllerName} {
+#end
+
+    @PostMapping
+    @ApiOperation(value = "添加")
+    public Result<?> save(@RequestBody @Valid) {
+
+        return Result.success();
+    }
+
+    @PatchMapping
+    @ApiOperation(value = "修改")
+    public Result<?> update(@RequestBody @Valid) {
+
+        return Result.success();
+    }
+
+    @GetMapping("/{id}")
+    @ApiOperation(value = "获取")
+    public Result<?> get(@PathVariable("id") String id) {
+
+        return Result.success();
+    }
+
+    @GetMapping
+    @ApiOperation(value = "获取分页列表")
+    public Result<?> page() {
+            LambdaQueryWrapper<SysUser> ew = Wrappers.lambdaQuery();
+
+        return Result.success();
+    }
+
+    @DeleteMapping("{id}")
+    @ApiOperation(value = "删除")
+    public Result<?> remove(@PathVariable("id") String id) {
+
+        return Result.success();
+    }
+
+    @PostMapping("remove")
+    @ApiOperation(value = "批量删除")
+    public Result<?> BatchRemove(@RequestBody List<?> editDTOS) {
+        List<Long> idList = editDTOS.stream().map(MenuEditDTO::getId).collect(Collectors.toList());
+
+        return Result.success();
+    }
+}
+#end
