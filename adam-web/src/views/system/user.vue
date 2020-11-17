@@ -81,7 +81,7 @@ title: 系统用户
 
 <script>
   import SysUserApi from '$my/code/mixin/sys-user-api'
-    import SysDeptApi from '$my/code/mixin/sys-dept-api'
+  import SysDeptApi from '$my/code/mixin/sys-dept-api'
   import treeConnect from '$ui/directives/tree-connect'
   import {MyCrud} from '$ui'
 
@@ -91,7 +91,7 @@ title: 系统用户
     inject: ['myPro'],
     data() {
       return {
-        defaultQuery: this.$route.query,
+        // defaultQuery: this.$route.query,
         query: {},
         adapter: MyCrud.adapter.call(this, 'SysUserApi'),
         columns: [

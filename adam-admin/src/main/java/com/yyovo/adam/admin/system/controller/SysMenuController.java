@@ -8,7 +8,9 @@ import com.yyovo.adam.admin.system.model.dto.MenuEditDTO;
 import com.yyovo.adam.admin.system.model.dto.MenuQueryDTO;
 import com.yyovo.adam.admin.system.model.dto.RoleEditDTO;
 import com.yyovo.adam.admin.system.model.enums.SystemError;
+import com.yyovo.adam.admin.system.model.pojo.SysDept;
 import com.yyovo.adam.admin.system.model.pojo.SysMenu;
+import com.yyovo.adam.admin.system.model.vo.DeptVO;
 import com.yyovo.adam.admin.system.model.vo.MenuVO;
 import com.yyovo.adam.admin.system.service.ISysMenuService;
 import com.yyovo.adam.common.base.controller.SuperController;
@@ -70,13 +72,20 @@ public class SysMenuController extends SuperController {
 
     @GetMapping
     @ApiOperation(value = "获取列表")
-    public Result<?> page(MenuQueryDTO menuQueryDTO) {
+    public Result<?> list(MenuQueryDTO queryDTO) {
         LambdaQueryWrapper<SysMenu> ew = Wrappers.lambdaQuery();
 
-        Page<SysMenu> page = new Page<>(menuQueryDTO.getPage(), menuQueryDTO.getLimit());
-        page.addOrder(OrderItem.asc("sort"));
-        page = sysMenuService.page(page, ew);
-        return Result.success(ConvertUtil.copyToPage(page, MenuVO.class));
+        if (queryDTO.isPagination()) {
+            Page<SysMenu> page = new Page<>(queryDTO.getPage(), queryDTO.getLimit());
+            page.addOrder(OrderItem.asc(queryDTO.getColumn()));
+            if (!queryDTO.isAsc()) {
+                page.addOrder(OrderItem.desc(queryDTO.getColumn()));
+            }
+            page = sysMenuService.page(page, ew);
+            return Result.success(ConvertUtil.copyToPage(page, MenuVO.class));
+        }
+        List<SysMenu> sysDeptList = sysMenuService.list(ew);
+        return Result.success(ConvertUtil.copyToList(sysDeptList, DeptVO.class));
     }
 
     @DeleteMapping("{id}")

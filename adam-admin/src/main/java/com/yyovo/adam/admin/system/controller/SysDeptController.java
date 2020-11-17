@@ -71,14 +71,17 @@ public class SysDeptController extends SuperController {
 
     @GetMapping
     @ApiOperation(value = "获取列表")
-    public Result<?> ListDept(DeptQueryDTO queryDTO){
+    public Result<?> list(DeptQueryDTO queryDTO){
         LambdaQueryWrapper<SysDept> ew = Wrappers.lambdaQuery();
         ew.eq(SysDept::getDisable, false);
         ew.eq(SysDept::getParentId, queryDTO.getParentId());
 
         if (queryDTO.isPagination()) {
             Page<SysDept> page = new Page<>(queryDTO.getPage(), queryDTO.getLimit());
-            page.addOrder(OrderItem.asc("sort"));
+            page.addOrder(OrderItem.asc(queryDTO.getColumn()));
+            if (!queryDTO.isAsc()) {
+                page.addOrder(OrderItem.desc(queryDTO.getColumn()));
+            }
             page = sysDeptService.page(page, ew);
             return Result.success(ConvertUtil.copyToPage(page, DeptVO.class));
         }

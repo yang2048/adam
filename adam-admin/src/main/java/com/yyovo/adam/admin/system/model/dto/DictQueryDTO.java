@@ -26,6 +26,12 @@ public class DictQueryDTO extends SuperPage implements Serializable {
     private String name;
 
     /**
+     * 字典标签
+     */
+    @ApiModelProperty(value = "字典标签")
+    private String label;
+
+    /**
      * 字典类型 1:字典组 2:字典属性
      */
     @ApiModelProperty(value = "字典类型 1:字典组 2:字典属性")

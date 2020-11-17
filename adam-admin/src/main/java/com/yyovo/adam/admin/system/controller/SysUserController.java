@@ -19,7 +19,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,19 +100,20 @@ public class SysUserController {
      */
     @GetMapping
     @ApiOperation(value = "获取用户列表")
-    public Result<?> page(UserQueryDTO userQueryDTO) {
+    public Result<?> list(UserQueryDTO queryDTO) {
         LambdaQueryWrapper<SysUser> ew = Wrappers.lambdaQuery();
-        if (!StrUtil.isEmptyOrUndefined(userQueryDTO.getGender())) {
-            ew.eq(SysUser::getGender, GenderEnum.convert(userQueryDTO.getGender()));
+        if (!StrUtil.isEmptyOrUndefined(queryDTO.getGender())) {
+            ew.eq(SysUser::getGender, GenderEnum.convert(queryDTO.getGender()));
         }
-        if (!StrUtil.isEmptyOrUndefined(userQueryDTO.getUserAccount())) {
-            ew.like(SysUser::getUserAccount, userQueryDTO.getUserAccount());
+        if (!StrUtil.isEmptyOrUndefined(queryDTO.getUserAccount())) {
+            ew.like(SysUser::getUserAccount, queryDTO.getUserAccount());
         }
-//        ew.eq(SysUser::getAvatar, "q");
-//        ew.orderByDesc(SysUser::getRegisterTime);
 
-        Page<SysUser> page = new Page<>(userQueryDTO.getPage(), userQueryDTO.getLimit());
-        page.addOrder(OrderItem.asc("register_time"));
+        Page<SysUser> page = new Page<>(queryDTO.getPage(), queryDTO.getLimit());
+        page.addOrder(OrderItem.asc(queryDTO.getColumn()));
+        if (!queryDTO.isAsc()) {
+            page.addOrder(OrderItem.desc(queryDTO.getColumn()));
+        }
         page = sysUserService.page(page, ew);
         return Result.success(ConvertUtil.copyToPage(page, UserVO.class));
     }
@@ -146,7 +146,8 @@ public class SysUserController {
     }
 
     @GetMapping("login")
-    public Result<?> BatchRemove() {
+    @ApiOperation(value = "登录")
+    public Result<?> login() {
         System.out.printf("login===================");
         SysUser user = sysUserService.getById("1314765829839118338");
         UserVO userVO = ConvertUtil.copyToDest(user, UserVO.class);

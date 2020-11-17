@@ -1,10 +1,10 @@
-package com.yyovo.adam.module;
+package com.yyovo.adam.forum;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AdamModuleApplicationTests {
+class AdamForumApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -1,6 +1,7 @@
 package com.yyovo.adam.admin.system.controller;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -23,7 +24,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -35,7 +38,7 @@ import java.util.stream.Collectors;
  * @since 2020-11-16
  */
 @RestController
-@RequestMapping("/admin.system/sys-dict")
+@RequestMapping("/sysDict")
 public class SysDictController extends SuperController {
 
     private final ISysDictService sysDictService;
@@ -78,11 +81,30 @@ public class SysDictController extends SuperController {
     public Result<?> list(DictQueryDTO queryDTO) {
         LambdaQueryWrapper<SysDict> ew = Wrappers.lambdaQuery();
         ew.eq(SysDict::getType, queryDTO.getType());
+        if (!StrUtil.isBlankOrUndefined(queryDTO.getName())) {
+            ew.eq(SysDict::getName, queryDTO.getName());
+        }
+        if (!StrUtil.isBlankOrUndefined(queryDTO.getLabel())) {
+            ew.eq(SysDict::getLabel, queryDTO.getLabel());
+        }
+        if (queryDTO.getParentId() != null) {
+            ew.eq(SysDict::getParentId, queryDTO.getParentId());
+        }
         if (queryDTO.isPagination()) {
             Page<SysDict> page = new Page<>(queryDTO.getPage(), queryDTO.getLimit());
-            page.addOrder(OrderItem.asc("sort"));
+            page.addOrder(OrderItem.asc(queryDTO.getColumn()));
+            if (!queryDTO.isAsc()) {
+                page.addOrder(OrderItem.desc(queryDTO.getColumn()));
+            }
             page = sysDictService.page(page, ew);
-            return Result.success(ConvertUtil.copyToPage(page, DictVO.class));
+            Page<DictVO> dictVOPage = ConvertUtil.copyToPage(page, DictVO.class);
+            for (DictVO dictVO : dictVOPage.getRecords()) {
+                List<SysDict> subList = sysDictService.list(Wrappers.<SysDict>lambdaQuery()
+                        .eq(SysDict::getParentId, dictVO.getId())
+                        .eq(SysDict::getDisable, 0).eq(SysDict::getType, 2));
+                dictVO.setSubList(ConvertUtil.copyToList(subList, DictVO.class));
+            }
+            return Result.success(dictVOPage);
         }
         List<SysDict> sysDictList = sysDictService.list(ew);
         return Result.success(ConvertUtil.copyToList(sysDictList, DictVO.class));
@@ -101,5 +123,28 @@ public class SysDictController extends SuperController {
         List<Long> idList = editDTOS.stream().map(DictEditDTO::getId).collect(Collectors.toList());
         sysDictService.removeByIds(idList);
         return Result.success();
+    }
+
+    @GetMapping("dictConfig")
+    @ApiOperation(value = "获取列表")
+    public Result<?> getDictConfig() {
+        Map<String, Object> result = new HashMap<>();
+
+        List<SysDict> dictList = sysDictService.list(Wrappers.<SysDict>lambdaQuery()
+                .eq(SysDict::getDisable, 0).eq(SysDict::getType, 1));
+        for (SysDict dict : dictList) {
+            List<SysDict> subList = sysDictService.list(Wrappers.<SysDict>lambdaQuery()
+                    .eq(SysDict::getParentId, dict.getId())
+                    .eq(SysDict::getDisable, 0).eq(SysDict::getType, 2));
+//            subList.forEach(sysDict -> {
+//                Map<String, Object> dictConfig = new HashMap<>();
+//                dictConfig.put("title", sysDict.getName());
+//                dictConfig.put("title", sysDict.getName());
+//                dictConfig.put("title", sysDict.getName());
+//                dictConfig.put("title", sysDict.getName());
+//            });
+            result.put(dict.getName(), subList);
+        }
+        return Result.success(result);
     }
 }

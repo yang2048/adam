@@ -71,11 +71,14 @@ public class SysRoleController extends SuperController {
 
     @GetMapping
     @ApiOperation(value = "获取列表")
-    public Result<?> page(RoleQueryDTO roleQueryDTO) {
+    public Result<?> list(RoleQueryDTO queryDTO) {
         LambdaQueryWrapper<SysRole> ew = Wrappers.lambdaQuery();
 
-        Page<SysRole> page = new Page<>(roleQueryDTO.getPage(), roleQueryDTO.getLimit());
-        page.addOrder(OrderItem.asc("sort"));
+        Page<SysRole> page = new Page<>(queryDTO.getPage(), queryDTO.getLimit());
+        page.addOrder(OrderItem.asc(queryDTO.getColumn()));
+        if (!queryDTO.isAsc()) {
+            page.addOrder(OrderItem.desc(queryDTO.getColumn()));
+        }
         page = sysRoleService.page(page, ew);
         return Result.success(ConvertUtil.copyToPage(page, RoleVO.class));
     }

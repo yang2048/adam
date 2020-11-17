@@ -5,7 +5,19 @@ jar.enabled = true
 bootJar.enabled = false
 
 dependencies {
+	implementation 'com.alibaba:druid-spring-boot-starter:1.2.1'
+	runtimeOnly 'mysql:mysql-connector-java'
 
+	//代码生成
+	implementation 'com.baomidou:mybatis-plus-generator:3.4.0'
+	implementation 'org.apache.velocity:velocity-engine-core:2.2'
+	implementation 'redis.clients:jedis:2.9.3'
+	implementation "io.lettuce:lettuce-core:6.0.1.RELEASE"
+	compile 'cn.hutool:hutool-all:5.4.4'
+	compile 'com.alibaba:fastjson:1.2.74'
+
+	implementation 'org.springframework.boot:spring-boot-starter'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {

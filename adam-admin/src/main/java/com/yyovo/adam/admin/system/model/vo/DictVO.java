@@ -1,8 +1,19 @@
 package com.yyovo.adam.admin.system.model.vo;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
+import java.util.List;
+
+@Data
 public class DictVO {
+
+    /**
+     * 主键
+     */
+    @ApiModelProperty(value = "主键ID")
+    private Long id;
+
     /**
      * 字典组id
      */
@@ -62,4 +73,10 @@ public class DictVO {
      */
     @ApiModelProperty(value = "备注 0:否 1:是")
     private String remark;
+
+    /**
+     * 子集合
+     */
+    @ApiModelProperty(value = "子集合")
+    private List<?> subList;
 }

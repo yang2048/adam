@@ -1,4 +1,4 @@
-archivesBaseName = 'adam-module'
+archivesBaseName = 'adam-mall'
 description = "this is gradle api demo"
 group = 'com.yyovo.adam'
 version = '0.0.1-SNAPSHOT'
@@ -9,8 +9,7 @@ repositories {
 }
 
 dependencies {
-	implementation project(':adam-forum')
-	implementation project(':adam-mall')
+
 }
 
 test {

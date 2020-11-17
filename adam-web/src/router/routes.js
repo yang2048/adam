@@ -8,8 +8,11 @@ export default function({ get }) {
   //   // to do something...
   // })
   // .catch(e => {
-  //   // to do something...
+  //   this.$store.dispatch('dictInit', null)
   // })
-  console.warn('============== ajaxajaxajax =================')
+  // this.$store.dispatch('dictInit', null)
+  console.warn('============== ajaxajaxajax ================= ')
   return [];
 }
+
+

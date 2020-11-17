@@ -16,42 +16,46 @@ title: 字典管理
             <my-select label="性别" name="sex" :options="[{label:'男',value:1},{label:'女',value:0}]"></my-select>
           </my-filter>
         </my-container>
-        <el-table border
-          :data="tableData"
+        <el-table
+         :data="tableData"
           style="width: 100%">
           <el-table-column type="expand">
-            <template>
+            <template slot-scope="props">
                 <div style="float: right;margin-bottom: 10px;">
                   <el-button size="mini" type="primary" icon="el-icon-plus">新增</el-button>
                   <el-button size="mini" type="danger" icon="el-icon-delete">批量删除</el-button>
                 </div>
               <el-table
-                :data="tableData"
+                :data="props.row.subList"
                 size="mini"
                 max-height="250"
                 border
                 style="width: 100%">
                 <el-table-column
                   type="selection"
-                  width="55">
+                  width="50">
                 </el-table-column>
                 <el-table-column
-                  prop="name"
-                  label="参数名称"
-                  width="180">
+                  prop="label"
+                  label="参数名称">
                 </el-table-column>
                 <el-table-column
-                  prop="address"
+                  prop="value"
                   label="参数值">
                 </el-table-column>
                 <el-table-column
-                  prop="name"
-                  label="字典描述"
+                  prop="checked"
+                  label="是否默认"
                   width="180">
                 </el-table-column>
                 <el-table-column
-                  prop="name"
-                  label="是否默认"
+                  prop="extend"
+                  label="扩展"
+                  width="180">
+                </el-table-column>
+                <el-table-column
+                  prop="remark"
+                  label="字典描述"
                   width="180">
                 </el-table-column>
                 <el-table-column label="操作">
@@ -64,9 +68,10 @@ title: 字典管理
               </el-table>
             </template>
           </el-table-column>
+          <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column
             label="字典名称"
-            prop="id">
+            prop="label">
           </el-table-column>
           <el-table-column
             label="字典编码"
@@ -74,7 +79,7 @@ title: 字典管理
           </el-table-column>
           <el-table-column
             label="描述"
-            prop="desc">
+            prop="remark">
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
@@ -84,87 +89,43 @@ title: 字典管理
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination ref="pager" background :total="100" layout="total, prev, pager, next" style="padding: 12px 0!important;float: right;"></el-pagination>
+        <el-pagination ref="pager" background :total="total" layout="total, prev, pager, next" style="padding: 12px 0!important;float: right;"></el-pagination>
       </my-panel>
   </my-wrapper>
 </template>
 
 <script>
-  import MockForExample from '$my/code/mixin/mock-for-example'
+  import SysDictApi from '$my/code/mixin/sys-dict-api'
 
   export default {
-    mixins: [MockForExample],
-    inject: ['myPro'],
+    mixins: [SysDictApi],
     data() {
       return {
         showSearch: false,
-        tableData: [{
-          id: '12987122',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }, {
-          id: '12987123',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }, {
-          id: '12987125',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }, {
-          id: '12987126',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }],
-        columns: [
-          {
-            type: 'selection'
-          },
-          {
-            label: '姓名',
-            prop: 'name'
-          },
-          {
-            label: '身份证',
-            prop: 'id'
-          },
-          {
-            label: '地区',
-            prop: 'desc'
-          },
-          {
-            type: 'handle',
-            label: '操作',
-            width: 200
-          }
-        ]
+        tableData: [],
+        subTableData: [],
+        page: 1,
+        limit: 10,
+        total: 0
+
       }
+    },
+    created() {
+      this.loaderTable(this.page, this.limit);
     },
     methods: {
       loaderTable(page, limit) {
-        return this.fetchMockForExample({
+        return this.fetchSysDictApi({
           data: {
+            type: 1,
             page,
             limit
           }
+        }).then(res => {
+          this.tableData = res.records
+          this.total = res.total
         })
       }
-
     }
   }
 </script>

@@ -17,6 +17,9 @@ public class SuperPage implements Serializable {
     @ApiModelProperty(value = "是否分页，默认true")
     protected boolean pagination = true;
 
+    private String column = "id";
+    private boolean asc = true;
+
     /**
      * 每页显示条数，默认 10
      */

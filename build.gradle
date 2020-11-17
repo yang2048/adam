@@ -64,18 +64,12 @@ subprojects {
         implementation 'org.springframework.boot:spring-boot-starter-validation'
         implementation 'org.springframework.boot:spring-boot-starter-amqp'
         implementation 'org.springframework.boot:spring-boot-starter-quartz'
-        compile("org.springframework.boot:spring-boot-starter-actuator")
         implementation 'com.baomidou:mybatis-plus-boot-starter:3.4.0'
         implementation 'com.github.xiaoymin:knife4j-spring-boot-starter:2.0.5'
-        implementation 'com.alibaba:druid-spring-boot-starter:1.2.1'
-        //代码生成
-        implementation 'com.baomidou:mybatis-plus-generator:3.4.0'
-        implementation 'org.apache.velocity:velocity-engine-core:2.2'
-        implementation 'redis.clients:jedis:2.9.3'
-        compile 'cn.hutool:hutool-all:5.4.4'
-        compile 'com.alibaba:fastjson:1.2.74'
+        compile("org.springframework.boot:spring-boot-starter-actuator")
+
+
         compileOnly 'org.projectlombok:lombok'
-        runtimeOnly 'mysql:mysql-connector-java'
         annotationProcessor 'org.projectlombok:lombok'
         testImplementation('org.springframework.boot:spring-boot-starter-test') {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
