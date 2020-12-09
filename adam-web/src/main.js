@@ -8,6 +8,8 @@ import './config'
  */
 import globalConfig from '$ui/config'
 
+import ajax from '$ui/utils/ajax';
+
 /**
  * 项目自定义的路由, 手动写的
  */
@@ -67,6 +69,22 @@ const routes = routesFactory({get: getView}).concat(autoRoutes)
 const router = new Router({
   routes,
   ...globalConfig.router
+})
+
+router.beforeEach((to, from, next) => {
+  // 逻辑实现
+  if (Object.keys(store.getters.getDict()).length === 0) {
+    ajax({
+      url: '/api/users'
+    }).then(res => {
+      // to do something...
+    }).catch(e => {
+      console.warn('字典查询异常')
+    })
+    const singles = { select: [{ label: '选择166', value: 'a1', desc: '其他值' }, { label: '选择2', value: 'a2', disabled: false, checked: true }, { label: '选择3', value: 'a3' }] }
+    store.dispatch('dictInit', singles) // 触发actions对应的change
+  }
+  next()
 })
 
 /**

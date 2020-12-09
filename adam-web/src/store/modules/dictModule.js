@@ -9,8 +9,11 @@ export default {
   },
   getters: {
     getDict: (state, getters) => (dictCode) => {
-      console.warn('============== getDict =================')
-      return state.dicts[dictCode]
+      if (dictCode) {
+        return state.dicts[dictCode]
+      } else {
+        return state.dicts
+      }
     }
   },
   mutations: {

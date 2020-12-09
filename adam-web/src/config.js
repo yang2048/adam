@@ -1,4 +1,4 @@
-import {set as setConfig} from '$ui/config'
+import { set as setConfig } from '$ui/config'
 
 // 写入运行时配置
 setConfig({
@@ -26,7 +26,21 @@ setConfig({
     loginPath: '/login',
 
     // 权限不足页面路径
-    authorizePath: '/403'
+    authorizePath: '/403',
+    
+    afterEach: (to, from) => { },
+    
+      // 请求拦截函数，axios=true 有效
+    request: ({access}, options, config) => {
+      // 在这里实现对请求前的处理
+      return config
+    },
+    
+    // 请求响应成功拦截函数，axios=true 有效
+    response: ({$router}, options, res) => {
+      // 在这里实现响应后的处理
+      return res
+    }
   },
   analysis: false
     /**
