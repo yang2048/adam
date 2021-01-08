@@ -73,7 +73,7 @@ public class SysDeptController extends SuperController {
     @ApiOperation(value = "获取列表")
     public Result<?> list(DeptQueryDTO queryDTO){
         LambdaQueryWrapper<SysDept> ew = Wrappers.lambdaQuery();
-        ew.eq(SysDept::getDisable, false);
+        ew.eq(SysDept::getDisabled, false);
         ew.eq(SysDept::getParentId, queryDTO.getParentId());
 
         if (queryDTO.isPagination()) {

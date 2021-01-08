@@ -1,6 +1,6 @@
 package com.yyovo.adam.admin.system.model.dto;
 
-import com.yyovo.adam.admin.system.model.enums.GenderEnum;
+import com.yyovo.adam.admin.system.model.enums.SexEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -17,6 +17,7 @@ public class UserEditDTO implements Serializable {
     /**
      * 主键ID
      */
+    @NotNull(message = "主键ID不能为空")
     @ApiModelProperty(value = "主键ID")
     private Long id;
 
@@ -35,7 +36,7 @@ public class UserEditDTO implements Serializable {
     private String nickname;
 
     @ApiModelProperty(value = "性别 1:男 2:女")
-    private GenderEnum gender;
+    private SexEnum sex;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "生日")
@@ -58,6 +59,6 @@ public class UserEditDTO implements Serializable {
     private String remark;
 
     @ApiModelProperty(value = "状态 0:否 1:是")
-    private Integer disable;
+    private String disabled;
 
 }

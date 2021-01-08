@@ -30,7 +30,7 @@ title: 角色管理
             ></el-button>
           </template>
           <div style="height: calc(70vh); overflow: auto;">
-            <div class="role-container">
+            <div class="role-container" ref="scrollTopList">
               <div
                 v-for="r of roles"
                 :key="r.id"
@@ -39,7 +39,7 @@ title: 角色管理
                 @click="changeRole(r)"
               >
                 <p class="title">{{ r.name }}</p>
-                <my-paragraph ellipsis>{{ r.info }}</my-paragraph>
+                <my-paragraph ellipsis>{{ r.remark }}</my-paragraph>
               </div>
             </div>
           </div>
@@ -64,9 +64,9 @@ title: 角色管理
             <el-tab-pane label="角色编辑" name="0">
               <div style="height: calc(65vh); overflow: auto;">
                 <my-form label-width="100px" :model="role">
-                  <my-input label="角色名称" name="name" placeholder="给目标起个名字"></my-input>
-                  <my-input label="角色描述" name="info" :props="{type:'textarea'}"></my-input>
-                  <my-radio label="角色状态" name="sex" dict="option" :loader="loader"></my-radio>
+                  <my-input label="角色名称" name="name" placeholder="角色名称"></my-input>
+                  <my-input label="角色描述" name="remark" :props="{type:'textarea'}"></my-input>
+                  <my-radio label="角色状态" name="disabled" dict="sys_disable_status" :loader="loaderDicts"></my-radio>
                 </my-form>
               </div>
             </el-tab-pane>
@@ -116,11 +116,12 @@ title: 角色管理
 </template>
 
 <script>
+  import SysRoleApi from '$my/code/mixin/sys-role-api'
 import MockForExample from '$my/code/mixin/mock-for-example'
 import treeConnect from '$ui/directives/tree-connect'
 // import {create} from '$ui/utils/tree'
 export default {
-  mixins: [MockForExample],
+  mixins: [SysRoleApi, MockForExample],
   directives: { treeConnect },
   inject: ['myPro'],
   data() {
@@ -156,12 +157,8 @@ export default {
     }
   },
   methods: {
-    loader(model, {name, dict}) {
-      const options = [
-        {label: '启用', value: 1},
-        {label: '禁用', value: 0}
-      ]
-      return Promise.resolve(options)
+    loaderDicts(model, {name, dict}) {
+      return Promise.resolve(this.$store.getters.getDict(dict))
     },
     changeRole(r) {
       this.role = r
@@ -177,16 +174,54 @@ export default {
           pageSize
         }
       })
+    },
+    openAddDialog() {
+
+    },
+    batchRemove() {
+
+    },
+    // 滚动加载分页
+    bindScroll () {
+      console.info('-滚动加载分页')
+      if(this.$refs.scrollTopList.scrollTop + this.$refs.scrollTopList.clientHeight >= this.$refs.scrollTopList.scrollHeight - 50) {
+        console.info('---------滚动加载分页1111')
+        // if(this.pageSize > this.total) {
+        //   return false
+        // }else{
+        //   this.pageSize = this.pageSize + 10 // 显示条数新增
+        //   this.getpageList() // 请求列表list 接口方法
+        // } 
+      }else{
+        return false
+      }
     }
   },
+  mounted () {
+    setTimeout(function() {
+      window.addEventListener('scroll', this.bindScroll(), false)
+    }, 3000);
+    // this.$refs.scrollTopList.addEventListener('scroll', this.bindScroll(), true)
+    // window.addEventListener('scroll', this.bindScroll(), false) // 监听（绑定）滚轮滚动事件
+  },
   created() {
-    this.fetchMockForExample().then((res) => {
-      this.roles = res.list
-      if (this.roles.length) {
-        this.role = this.roles[0];
+    // this.fetchMockForExample().then((res) => {
+    //   this.roles = res.list
+    //   if (this.roles.length) {
+    //     this.role = this.roles[0];
+    //   }
+    // })
+    this.fetchSysRoleApi({
+      data: {
       }
+    }).then((res) => {
+      this.roles = res.list
+      
     })
   }
+  // destroyed () {
+  //   window.removeEventListener('scroll', this.scroll) //  离开页面清除（移除）滚轮滚动事件
+  // }
 }
 </script>
 

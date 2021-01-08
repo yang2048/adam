@@ -51,7 +51,7 @@ public class SysRole extends SuperModel {
      * 数据权限范围类型 0:自定义 1:全部数据 2:本部门及下属部门 3:仅本部门
      */
     @ApiModelProperty(value = "数据权限范围类型 0:自定义 1:全部数据 2:本部门及下属部门 3:仅本部门")
-    private Boolean scopeType;
+    private String scopeType;
 
     /**
      * 数据权限范围
@@ -63,6 +63,6 @@ public class SysRole extends SuperModel {
      * 状态 0:否 1:是
      */
     @ApiModelProperty(value = "状态 0:否 1:是")
-    private Boolean disable;
+    private String disabled;
 
 }

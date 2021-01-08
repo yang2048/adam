@@ -34,7 +34,8 @@
     "build:suit": "npm run ready && npm run route build suit && npm run theme prod suit && cross-env APP=suit npm run build"
   },
   "dependencies": {
-    "@xdh/my": "^4.0.3"
+    "@xdh/my": "^4.0.3",
+    "vuex-persistedstate": "^4.0.0-beta.1"
   },
   "devDependencies": {
     "@ant-design/colors": "^4.0.5",

@@ -41,9 +41,9 @@ title: 系统用户
           :adapter="adapter">
             <!-- 定义筛选条件 -->
             <template v-slot:filter>
-                <my-input label="用户名" name="userAccount"></my-input>
-                <my-select label="性别" name="gender" :options="[{label:'男',value:1},{label:'女',value:2}]"></my-select>
-                <my-input label="条件1" name="q1" collapsible></my-input>
+                <my-input label="用户名" name="userAccount" placeholder="请输入用户名" :props="{clearable: true}"></my-input>
+                <my-select label="性别" name="sex" :props="{clearable: true}" dict="sys_user_sex" :loader="loaderDicts"></my-select>
+                <my-input label="条件1" name="q1" :props="{clearable: true}" collapsible></my-input>
             </template>
 
             <!-- 定义新增/修改表单 -->
@@ -53,13 +53,13 @@ title: 系统用户
                 <my-input label="昵称" name="nickname" :rules="{ required: true }" ></my-input>
                 <my-input label="手机" name="phone" :rules="{ required: true }" ></my-input>
                 <my-input label="邮箱" name="email" :rules="{ required: true }" ></my-input>
-                <my-input label="性别" name="gender" :rules="{ required: true }" ></my-input>
+                <my-radio label="性别" name="sex" dict="sys_user_sex" :loader="loaderDicts"></my-radio>
                 <my-date-picker label="出生日期" name="birthday" :props="{valueFormat:'yyyy-MM-dd'}"></my-date-picker>
                 <my-input label="部门" name="deptId" :rules="{ required: true }" ></my-input>
                 <my-input label="头像" name="avatar" ></my-input>
                 <my-input label="备注" name="remark" ></my-input>
                 <my-input label="类型" name="userType" ></my-input>
-                <my-radio label="状态" name="disable" dict="select" :loader="loaderGender"></my-radio>
+                <my-radio label="状态" name="disabled" dict="sys_disable_status" :loader="loaderDicts"></my-radio>
               </div>
             </template>
 
@@ -137,6 +137,10 @@ title: 系统用户
         return this.currentNode.data.name
       }
     },
+    created: {},
+    mounted() {
+      this.setDefaultCurrentNode()
+    },
     methods: {
       loader(node, resolve) {
         if (node.data) {
@@ -160,7 +164,7 @@ title: 系统用户
           }])
         }
       },
-      loaderGender(model, {name, dict}) {
+      loaderDicts(model, {name, dict}) {
         return Promise.resolve(this.$store.getters.getDict(dict))
       },
       renderContent(h, { node, data, store }) {
@@ -196,9 +200,6 @@ title: 系统用户
       batchRemove() {
         this.$refs.table.batchRemove()
       }
-    },
-    mounted() {
-      this.setDefaultCurrentNode()
     }
   }
 </script>

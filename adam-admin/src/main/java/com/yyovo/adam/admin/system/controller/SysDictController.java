@@ -57,7 +57,7 @@ public class SysDictController extends SuperController {
             return Result.failed(SystemError.USER_REGISTERED);
         }
         SysDict dict = ConvertUtil.copyToDest(editDTO, SysDict.class);
-        sysDictService.save(dict);
+        sysDictService.saveOrUpdate(dict);
         return Result.success(ConvertUtil.copyToDest(dict, DictVO.class));
     }
 
@@ -101,7 +101,7 @@ public class SysDictController extends SuperController {
             for (DictVO dictVO : dictVOPage.getRecords()) {
                 List<SysDict> subList = sysDictService.list(Wrappers.<SysDict>lambdaQuery()
                         .eq(SysDict::getParentId, dictVO.getId())
-                        .eq(SysDict::getDisable, 0).eq(SysDict::getType, 2));
+                        .eq(SysDict::getDisabled, false).eq(SysDict::getType, 2));
                 dictVO.setSubList(ConvertUtil.copyToList(subList, DictVO.class));
             }
             return Result.success(dictVOPage);
@@ -131,11 +131,11 @@ public class SysDictController extends SuperController {
         Map<String, Object> result = new HashMap<>();
 
         List<SysDict> dictList = sysDictService.list(Wrappers.<SysDict>lambdaQuery()
-                .eq(SysDict::getDisable, 0).eq(SysDict::getType, 1));
+                .eq(SysDict::getDisabled, false).eq(SysDict::getType, 1));
         for (SysDict dict : dictList) {
             List<SysDict> subList = sysDictService.list(Wrappers.<SysDict>lambdaQuery()
                     .eq(SysDict::getParentId, dict.getId())
-                    .eq(SysDict::getDisable, 0).eq(SysDict::getType, 2));
+                    .eq(SysDict::getDisabled, false).eq(SysDict::getType, 2));
 //            subList.forEach(sysDict -> {
 //                Map<String, Object> dictConfig = new HashMap<>();
 //                dictConfig.put("title", sysDict.getName());

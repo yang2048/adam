@@ -1,9 +1,7 @@
 package com.yyovo.adam.admin.system.model.vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.yyovo.adam.admin.system.model.enums.GenderEnum;
+import com.yyovo.adam.admin.system.model.enums.SexEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -32,7 +30,7 @@ public class UserVO implements Serializable {
     private String nickname;
 
     @ApiModelProperty(value = "性别 1:男 2:女")
-    private GenderEnum gender;
+    private SexEnum sex;
 
     @JSONField(format="yyyy-MM-dd")
     @ApiModelProperty(value = "生日")
@@ -63,4 +61,10 @@ public class UserVO implements Serializable {
     @JSONField(format="yyyy-MM-dd HH:mm:ss.SSS")
     @ApiModelProperty(value = "最后登录时间")
     private LocalDateTime lastLoginTime;
+
+    /**
+     * 状态 0:否 1:是
+     */
+    @ApiModelProperty(value = "状态 0:否 1:是")
+    private String disabled;
 }

@@ -16,8 +16,7 @@
         <result column="label" property="label" />
         <result column="value" property="value" />
         <result column="extend" property="extend" />
-        <result column="checked" property="checked" />
-        <result column="disable" property="disable" />
+        <result column="disabled" property="disabled" />
         <result column="sort" property="sort" />
         <result column="remark" property="remark" />
     </resultMap>
@@ -30,7 +29,7 @@
         updated_by,
         updated_time,
         deleted,
-        parent_id, name, type, label, value, extend, checked, disable, sort, remark
+        parent_id, name, type, label, value, extend, checked, disabled, sort, remark
     </sql>
 
 </mapper>

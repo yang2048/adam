@@ -58,16 +58,10 @@ public class DictEditDTO implements Serializable {
     private String extend;
 
     /**
-     * 是否默认 0:否 1:是
-     */
-    @ApiModelProperty(value = "是否默认 0:否 1:是")
-    private Integer checked;
-
-    /**
      * 是否禁用 0:否 1:是
      */
     @ApiModelProperty(value = "是否禁用 0:否 1:是")
-    private Integer disable;
+    private String disabled;
 
     /**
      * 排序 数字越大越靠前

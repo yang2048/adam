@@ -35,12 +35,12 @@ public class DictQueryDTO extends SuperPage implements Serializable {
      * 字典类型 1:字典组 2:字典属性
      */
     @ApiModelProperty(value = "字典类型 1:字典组 2:字典属性")
-    private Integer type;
+    private String type;
 
     /**
      * 是否禁用 0:否 1:是
      */
     @ApiModelProperty(value = "是否禁用 0:否 1:是")
-    private Integer disable;
+    private String disabled;
 
 }

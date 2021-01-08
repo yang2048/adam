@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yyovo.adam.admin.system.model.dto.UserEditDTO;
 import com.yyovo.adam.admin.system.model.dto.UserQueryDTO;
-import com.yyovo.adam.admin.system.model.enums.GenderEnum;
+import com.yyovo.adam.admin.system.model.enums.SexEnum;
 import com.yyovo.adam.admin.system.model.enums.SystemError;
 import com.yyovo.adam.admin.system.model.pojo.SysUser;
 import com.yyovo.adam.admin.system.model.vo.UserVO;
@@ -67,14 +67,13 @@ public class SysUserController {
     /**
      * 修改
      *
-     * @param id          主键
-     * @param userEditDTO 请求参数
+     * @param editDTO 请求参数
      * @return R
      */
     @PatchMapping()
     @ApiOperation(value = "修改用户")
-    public Result<?> update(@RequestBody @Valid UserEditDTO userEditDTO) {
-        SysUser user = ConvertUtil.copyToDest(userEditDTO, SysUser.class);
+    public Result<?> update(@RequestBody @Valid UserEditDTO editDTO) {
+        SysUser user = ConvertUtil.copyToDest(editDTO, SysUser.class);
         sysUserService.updateById(user);
         return Result.success(ConvertUtil.copyToDest(user, UserVO.class));
     }
@@ -95,15 +94,15 @@ public class SysUserController {
     /**
      * 获取列表
      *
-     * @param userQueryDTO 查询参数
+     * @param queryDTO 查询参数
      * @return R
      */
     @GetMapping
     @ApiOperation(value = "获取用户列表")
     public Result<?> list(UserQueryDTO queryDTO) {
         LambdaQueryWrapper<SysUser> ew = Wrappers.lambdaQuery();
-        if (!StrUtil.isEmptyOrUndefined(queryDTO.getGender())) {
-            ew.eq(SysUser::getGender, GenderEnum.convert(queryDTO.getGender()));
+        if (queryDTO.getSex() != null) {
+            ew.eq(SysUser::getSex, SexEnum.convert(queryDTO.getSex()));
         }
         if (!StrUtil.isEmptyOrUndefined(queryDTO.getUserAccount())) {
             ew.like(SysUser::getUserAccount, queryDTO.getUserAccount());
@@ -134,13 +133,13 @@ public class SysUserController {
     /**
      * 批量删除
      *
-     * @param userEditDTOS 主键集合
+     * @param editDTOS 主键集合
      * @return R
      */
     @PostMapping("remove")
     @ApiOperation(value = "批量删除用户")
-    public Result<?> batchRemove(@RequestBody List<UserEditDTO> userEditDTOS) {
-        List<Long> idList = userEditDTOS.stream().map(UserEditDTO::getId).collect(Collectors.toList());
+    public Result<?> batchRemove(@RequestBody List<UserEditDTO> editDTOS) {
+        List<Long> idList = editDTOS.stream().map(UserEditDTO::getId).collect(Collectors.toList());
         sysUserService.removeByIds(idList);
         return Result.success();
     }

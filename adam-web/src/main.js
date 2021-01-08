@@ -31,6 +31,7 @@ import vuexOptions from '@/store/index'
  */
 import '@/style/index.scss'
 
+import createPersistedState from 'vuex-persistedstate'
 
 /**
  * 主应用增强
@@ -49,7 +50,19 @@ const {
 /**
  * 全局共享数据 Vuex实例
  */
-const store = new Vuex.Store(vuexOptions)
+const store = new Vuex.Store({
+  ...vuexOptions,
+  plugins: [createPersistedState({
+    storage: window.sessionStorage,
+    reducer (val) {
+      return {
+      dictModule: val.dictModule
+    }
+  }
+  })]
+})
+// const store = new Vuex.Store(vuexOptions)
+
 
 /**
  * 如果启用了自动创建路由功能，获取路由配置信息
@@ -72,17 +85,16 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  // 逻辑实现
+  // 字典装载
   if (Object.keys(store.getters.getDict()).length === 0) {
     ajax({
-      url: '/api/users'
+      url: '/api/sysDict/dictConfig'
     }).then(res => {
-      // to do something...
+      store.dispatch('dictInit', res)
+      console.warn('store装载完成')
     }).catch(e => {
-      console.warn('字典查询异常')
+      console.warn('字典装载异常')
     })
-    const singles = { select: [{ label: '选择166', value: 'a1', desc: '其他值' }, { label: '选择2', value: 'a2', disabled: false, checked: true }, { label: '选择3', value: 'a3' }] }
-    store.dispatch('dictInit', singles) // 触发actions对应的change
   }
   next()
 })

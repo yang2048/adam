@@ -39,7 +39,7 @@ public class SysDict extends SuperModel {
      * 字典类型 1:字典组 2:字典属性
      */
     @ApiModelProperty(value = "字典类型 1:字典组 2:字典属性")
-    private Integer type;
+    private String type;
 
     /**
      * 字典标签
@@ -60,16 +60,10 @@ public class SysDict extends SuperModel {
     private String extend;
 
     /**
-     * 是否默认 0:否 1:是
-     */
-    @ApiModelProperty(value = "是否默认 0:否 1:是")
-    private Integer checked;
-
-    /**
      * 是否禁用 0:否 1:是
      */
     @ApiModelProperty(value = "是否禁用 0:否 1:是")
-    private Integer disable;
+    private String disabled;
 
     /**
      * 排序 数字越大越靠前

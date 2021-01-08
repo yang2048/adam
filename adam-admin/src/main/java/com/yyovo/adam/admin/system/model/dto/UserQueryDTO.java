@@ -16,7 +16,7 @@ public class UserQueryDTO extends SuperPage {
     private String nickname;
 
     @ApiModelProperty(value = "性别 1:男 2:女")
-    private String gender;
+    private String sex;
 
     @ApiModelProperty(value = "手机")
     private String phone;
@@ -25,5 +25,5 @@ public class UserQueryDTO extends SuperPage {
     private String email;
 
     @ApiModelProperty(value = "状态 0:否 1:是")
-    private Integer disable;
+    private String disabled;
 }

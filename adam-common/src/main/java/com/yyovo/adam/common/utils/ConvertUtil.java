@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 public class ConvertUtil {
@@ -21,6 +22,9 @@ public class ConvertUtil {
      */
     public static void convert(Object source, Object target) {
         try {
+            if (Objects.isNull(source)) {
+                return;
+            }
             BeanUtils.copyProperties(source, target);
 //            log.debug("转换之前数据 ==> {}", source);
 //            log.debug("转换之后数据 <== {}", target);
@@ -41,10 +45,13 @@ public class ConvertUtil {
      */
     public static <T> T copyToDest(Object source, Class<T> tClass) {
         try {
+            if (Objects.isNull(source)) {
+                return null;
+            }
             T t = tClass.newInstance();
             BeanUtils.copyProperties(source, t);
-//            log.debug("转换之前数据 ==> {}", source);
-//            log.debug("转换之后数据 <== {}", t);
+            log.debug("转换之前数据 ==> {}", source);
+            log.debug("转换之后数据 <== {}", t);
             return t;
         } catch (Exception e) {
             throw new ApiRuntimeException(ErrorType.SYSTEM_CONVERT);

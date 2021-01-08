@@ -1,9 +1,7 @@
 package com.yyovo.adam.admin.system.model.pojo;
 
-import com.alibaba.fastjson.annotation.JSONField;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yyovo.adam.admin.system.model.enums.GenderEnum;
+import com.yyovo.adam.admin.system.model.enums.SexEnum;
 import com.yyovo.adam.common.base.model.SuperModel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -68,8 +66,8 @@ public class SysUser extends SuperModel {
     /**
      * 性别 1:男 2:女 3:未知
      */
-    @ApiModelProperty(value = "性别 1:男 2:女 3:未知")
-    private GenderEnum gender;
+    @ApiModelProperty(value = "性别 1:男 2:女 0:未知")
+    private SexEnum sex;
 
     /**
      * 生日
@@ -129,6 +127,6 @@ public class SysUser extends SuperModel {
      * 状态 0:否 1:是
      */
     @ApiModelProperty(value = "状态 0:否 1:是")
-    private Boolean disable;
+    private String disabled;
 
 }

@@ -76,7 +76,7 @@ public class MenuEditDTO implements Serializable {
      * 是否分组 0:否 1:是
      */
     @ApiModelProperty(value = "是否分组 0:否 1:是")
-    private Boolean batch;
+    private String batch;
 
     /**
      * 分组标题
@@ -94,11 +94,11 @@ public class MenuEditDTO implements Serializable {
      * 是否可见 0:否 1:是
      */
     @ApiModelProperty(value = "是否可见 0:否 1:是")
-    private Boolean visible;
+    private String visible;
 
     /**
      * 禁用状态 0:否 1:是
      */
     @ApiModelProperty(value = "禁用状态 0:否 1:是")
-    private Boolean disabled;
+    private String disabled;
 }

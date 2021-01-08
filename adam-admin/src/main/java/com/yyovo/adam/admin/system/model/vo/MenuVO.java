@@ -38,7 +38,7 @@ public class MenuVO implements Serializable {
      * 菜单类型 1:菜单 2:按钮
      */
     @ApiModelProperty(value = "菜单类型 1:菜单 2:按钮")
-    private Integer type;
+    private String type;
 
     /**
      * 菜单项标题
@@ -74,7 +74,7 @@ public class MenuVO implements Serializable {
      * 是否分组 0:否 1:是
      */
     @ApiModelProperty(value = "是否分组 0:否 1:是")
-    private Boolean batch;
+    private String batch;
 
     /**
      * 分组标题
@@ -98,6 +98,6 @@ public class MenuVO implements Serializable {
      * 禁用状态 0:否 1:是
      */
     @ApiModelProperty(value = "禁用状态 0:否 1:是")
-    private Boolean disabled;
+    private String disabled;
 
 }

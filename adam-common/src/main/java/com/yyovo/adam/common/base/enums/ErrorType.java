@@ -23,7 +23,7 @@ public enum ErrorType implements IErrorType {
     /**
      * 错误类型码
      */
-    private final int code;
+    private final Integer code;
     /**
      * 错误类型描述信息
      */

@@ -28,8 +28,6 @@ setConfig({
     // 权限不足页面路径
     authorizePath: '/403',
     
-    afterEach: (to, from) => { },
-    
       // 请求拦截函数，axios=true 有效
     request: ({access}, options, config) => {
       // 在这里实现对请求前的处理

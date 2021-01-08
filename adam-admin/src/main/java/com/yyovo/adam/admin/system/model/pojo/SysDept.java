@@ -63,6 +63,6 @@ public class SysDept extends SuperModel {
      * 状态 0:否 1:是
      */
     @ApiModelProperty(value = "状态 0:否 1:是")
-    private Boolean disable;
+    private String disabled;
 
 }

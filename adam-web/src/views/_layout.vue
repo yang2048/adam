@@ -212,7 +212,7 @@ access:
         }
       },
       handleInfo() {
-        window.location.href = 'http://newgateway.gitee.io/my/'
+        window.open('http://newgateway.gitee.io/my/', '_blank');
       }
     },
     created() {
