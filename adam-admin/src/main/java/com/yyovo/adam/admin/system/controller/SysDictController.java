@@ -30,9 +30,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * <p>
- * 系统字典表 前端控制器
- * </p>
+ * 系统字典
  *
  * @author Yong.Yang
  * @since 2020-11-16
@@ -135,7 +133,7 @@ public class SysDictController extends SuperController {
         for (SysDict dict : dictList) {
             List<SysDict> subList = sysDictService.list(Wrappers.<SysDict>lambdaQuery()
                     .eq(SysDict::getParentId, dict.getId())
-                    .eq(SysDict::getDisabled, false).eq(SysDict::getType, 2));
+                    .eq(SysDict::getType, 2));
 //            subList.forEach(sysDict -> {
 //                Map<String, Object> dictConfig = new HashMap<>();
 //                dictConfig.put("title", sysDict.getName());

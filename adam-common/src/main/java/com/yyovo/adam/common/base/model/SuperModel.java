@@ -51,5 +51,5 @@ public class SuperModel implements Serializable {
     @ApiModelProperty(value = "是否删除 0:正常，1:删除")
     @TableField(value = "deleted", fill = FieldFill.INSERT)
     @TableLogic
-    private Integer deleted;
+    private boolean deleted;
 }

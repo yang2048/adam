@@ -24,9 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * <p>
- * 系统角色 前端控制器
- * </p>
+ * 系统角色
  *
  * @author Yong.Yang
  * @since 2020-11-10

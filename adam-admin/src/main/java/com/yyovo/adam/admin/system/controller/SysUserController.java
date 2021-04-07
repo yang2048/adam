@@ -25,9 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * <p>
- * 系统用户表 前端控制器
- * </p>
+ * 系统用户
  *
  * @author Yang.Yong
  * @since 2020-10-09
@@ -144,7 +142,7 @@ public class SysUserController {
         return Result.success();
     }
 
-    @GetMapping("login")
+    @PostMapping("login")
     @ApiOperation(value = "登录")
     public Result<?> login() {
         System.out.printf("login===================");

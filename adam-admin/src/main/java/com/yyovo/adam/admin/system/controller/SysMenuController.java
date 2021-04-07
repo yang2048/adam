@@ -25,9 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * <p>
- * 系统权限表 前端控制器
- * </p>
+ * 系统权限
  *
  * @author Yong.Yang
  * @since 2020-11-10
